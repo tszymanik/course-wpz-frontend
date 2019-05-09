@@ -6,6 +6,8 @@ import React, {
 
 import styles from './App.module.scss';
 
+import { BACKEND_URL } from './STATIC.js';
+
 type AppState = {
   login: string;
   password: string;
@@ -77,6 +79,30 @@ class App extends Component<any, AppState> {
       login,
       password,
     } = this.state;
+
+    fetch(`${BACKEND_URL}/auth/login`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: login,
+        password
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        console.log(response);
+        if (!response.ok)
+          throw response;
+        return response.json();
+      })
+      .then(json => {
+        const { auth_token } = json;
+      })
+      .catch(err => {
+        console.error(err);
+      })
 
     console.log({
       login,
