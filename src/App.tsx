@@ -1,12 +1,6 @@
-import React, {
-  Component,
-  ChangeEvent,
-  FormEvent,
-} from 'react';
-
+import axios from 'axios';
+import React, { ChangeEvent, Component, FormEvent } from 'react';
 import styles from './App.module.scss';
-
-import { BACKEND_URL } from './STATIC.js';
 
 type AppState = {
   login: string;
@@ -80,25 +74,16 @@ class App extends Component<any, AppState> {
       password,
     } = this.state;
 
-    fetch(`${BACKEND_URL}/auth/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email: login,
-        password
-      }),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
+    axios.post(`/auth/login`, {
+      email: login,
+      password
     })
       .then(response => {
         console.log(response);
-        if (!response.ok)
+        if (response.status != 200)
           throw response;
-        return response.json();
-      })
-      .then(json => {
-        const { auth_token } = json;
+        const { auth_token } = response.data;
+        localStorage.setItem('token', auth_token);
       })
       .catch(err => {
         console.error(err);
