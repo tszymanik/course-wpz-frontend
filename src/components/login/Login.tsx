@@ -95,6 +95,7 @@ class Login extends Component<any, LoginState> {
       const loginData = loginResponseData.data;
       const { auth_token } = loginData;
       window.sessionStorage.setItem('token', auth_token);
+      window.sessionStorage.setItem('email', email);
 
       this.setState({
         authenticated: true,
