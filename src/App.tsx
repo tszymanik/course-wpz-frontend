@@ -1,9 +1,5 @@
-import React, {
-  Component,
-  ChangeEvent,
-  FormEvent,
-} from 'react';
-
+import axios from 'axios';
+import React, { ChangeEvent, Component, FormEvent } from 'react';
 import styles from './App.module.scss';
 
 type AppState = {
@@ -77,6 +73,21 @@ class App extends Component<any, AppState> {
       login,
       password,
     } = this.state;
+
+    axios.post(`/auth/login`, {
+      email: login,
+      password
+    })
+      .then(response => {
+        console.log(response);
+        if (response.status != 200)
+          throw response;
+        const { auth_token } = response.data;
+        localStorage.setItem('token', auth_token);
+      })
+      .catch(err => {
+        console.error(err);
+      })
 
     console.log({
       login,
