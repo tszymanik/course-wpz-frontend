@@ -1,24 +1,32 @@
 import axios from 'axios';
 import React, { ChangeEvent, Component, FormEvent } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import styles from './Login.module.scss';
 
 type LoginState = {
   email: string;
   password: string;
+  authenticated: boolean;
 };
 
 class Login extends Component<any, LoginState> {
   state: LoginState = {
     email: '',
     password: '',
+    authenticated: false,
   }
 
   render() {
     const {
       email,
       password,
+      authenticated,
     } = this.state;
+
+    if (authenticated) {
+      return <Redirect to="/" />;
+    }
 
     return (
       <div className="container">
@@ -86,7 +94,11 @@ class Login extends Component<any, LoginState> {
   
       const loginData = loginResponseData.data;
       const { auth_token } = loginData;
-      window.sessionStorage.setItem('token', auth_token); 
+      window.sessionStorage.setItem('token', auth_token);
+
+      this.setState({
+        authenticated: true,
+      });
     } catch (error) {
       console.log(error);
     }
