@@ -1,0 +1,14 @@
+version: '3.1'
+services:
+  app:
+    image: node:12
+    restart: always
+    volumes:
+      - .:/src
+    working_dir: /src
+    environment:
+      NODE_ENV: development
+    ports:
+      - 5080:5080
+    command: bash -c 'npm install
+            && npm start'
