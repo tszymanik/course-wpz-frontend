@@ -26,9 +26,6 @@ class Home extends Component<any, HomeState> {
     if (authenticated) {
       return (
         <div>
-          <Link to='/logout'>
-            Logout
-          </Link>
           <Menu />
         </div>
       );
