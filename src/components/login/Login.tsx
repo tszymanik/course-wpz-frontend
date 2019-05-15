@@ -84,7 +84,7 @@ class Login extends Component<any, LoginState> {
     } = this.state;
 
     try {
-      const loginResponseData = await axios.post(
+      const loginResponse = await axios.post(
         '/auth/login',
         {
           email,
@@ -92,7 +92,7 @@ class Login extends Component<any, LoginState> {
         }
       );
   
-      const loginData = loginResponseData.data;
+      const loginData = loginResponse.data;
       const { auth_token } = loginData;
       window.sessionStorage.setItem('token', auth_token);
       window.sessionStorage.setItem('email', email);

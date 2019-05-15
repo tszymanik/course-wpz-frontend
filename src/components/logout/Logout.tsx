@@ -13,7 +13,7 @@ class Logout extends Component<any, LogoutState> {
 
   async componentDidMount() {
     try {
-      const logoutResponseData =  await axios.get(
+      const logoutResponse =  await axios.get(
         '/auth/logout',
         {
           headers: {
@@ -22,7 +22,7 @@ class Logout extends Component<any, LogoutState> {
         },
       );
 
-      console.log(logoutResponseData);
+      console.log(logoutResponse);
 
       this.setState({
         completed: true
