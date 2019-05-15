@@ -1,23 +1,22 @@
 import axios from 'axios';
 import React, { ChangeEvent, Component, FormEvent } from 'react';
-import { BrowserRouter, Switch, Route, NavLink, Link } from 'react-router-dom';
 
 import styles from './Login.module.scss';
 
 type LoginState = {
-  login: string;
+  email: string;
   password: string;
 };
 
 class Login extends Component<any, LoginState> {
   state: LoginState = {
-    login: '',
+    email: '',
     password: '',
   }
 
   render() {
     const {
-      login,
+      email,
       password,
     } = this.state;
 
@@ -32,8 +31,8 @@ class Login extends Component<any, LoginState> {
               type="email"
               className="form-control"
               placeholder="Email"
-              value={login}
-              onChange={this.onChangeLogin}
+              value={email}
+              onChange={this.onChangeEmail}
             />
           </div>
           <div className="form-group">
@@ -56,9 +55,9 @@ class Login extends Component<any, LoginState> {
     );
   }
 
-  onChangeLogin = (e: ChangeEvent<HTMLInputElement>) => {
+  onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      login: e.target.value,
+      email: e.target.value,
     });
   }
 
@@ -68,33 +67,29 @@ class Login extends Component<any, LoginState> {
     });
   }
 
-  onSubmit = (e: FormEvent) => {
+  onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const {
-      login,
+      email,
       password,
     } = this.state;
 
-    axios.post(`/auth/login`, {
-      email: login,
-      password
-    })
-      .then(response => {
-        console.log(response);
-        if (response.status != 200)
-          throw response;
-        const { auth_token } = response.data;
-        localStorage.setItem('token', auth_token);
-      })
-      .catch(err => {
-        console.error(err);
-      })
-
-    console.log({
-      login,
-      password,
-    });
+    try {
+      const loginResponseData = await axios.post(
+        '/auth/login',
+        {
+          email,
+          password,
+        }
+      );
+  
+      const loginData = loginResponseData.data;
+      const { auth_token } = loginData;
+      window.sessionStorage.setItem('token', auth_token); 
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
