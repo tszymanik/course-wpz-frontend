@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route, NavLink, Link } from 'react-router-dom';
+import Menu from '../menu/Menu';
 
 type HomeState = {
   authenticated: boolean;
@@ -28,6 +29,7 @@ class Home extends Component<any, HomeState> {
           <Link to='/logout'>
             Logout
           </Link>
+          <Menu />
         </div>
       );
     }
