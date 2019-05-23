@@ -1,27 +1,22 @@
 import axios from 'axios';
-import React, {
-  ChangeEvent,
-  Component,
-  FormEvent,
-} from 'react';
-import {
-  Redirect,
-  Link,
-} from 'react-router-dom';
+import React, { ChangeEvent, Component, FormEvent } from 'react';
+import { Redirect, Link } from 'react-router-dom';
 
-import styles from './Login.module.scss';
+import styles from './Register.module.scss';
 
-type LoginState = {
+type RegisterState = {
   formSubmitted: boolean;
-  shouldRedirectHome: boolean;
+  shouldRedirectLogin: boolean;
+  userName: string;
   email: string;
   password: string;
 };
 
-class Login extends Component<any, LoginState> {
-  state: LoginState = {
+class Register extends Component<any, RegisterState> {
+  state: RegisterState = {
     formSubmitted: false,
-    shouldRedirectHome: false,
+    shouldRedirectLogin: false,
+    userName: '',
     email: '',
     password: '',
   }
@@ -29,13 +24,14 @@ class Login extends Component<any, LoginState> {
   render() {
     const {
       formSubmitted,
-      shouldRedirectHome,
+      shouldRedirectLogin,
+      userName,
       email,
       password,
     } = this.state;
 
-    if (shouldRedirectHome) {
-      return <Redirect to="/" />;
+    if (shouldRedirectLogin) {
+      return <Redirect to="/login" />;
     }
 
     return (
@@ -45,9 +41,18 @@ class Login extends Component<any, LoginState> {
             <div className="col-lg-6">
               <div className={styles.contentWrapper}>
                 <div className={styles.header}>
-                  <h1>Hello</h1>
+                  <h1>Create an account</h1>
                 </div>
                 <form onSubmit={this.onSubmit}>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="User name"
+                      value={userName}
+                      onChange={this.onChangeUserName}
+                    />
+                  </div>
                   <div className="form-group">
                     <input
                       type="email"
@@ -69,18 +74,25 @@ class Login extends Component<any, LoginState> {
                   <button
                     type="submit"
                     className="btn btn-primary d-block w-100"
+                    disabled={formSubmitted}
                   >
-                    Log in
-                  </button>
+                    Sign up
+                </button>
                 </form>
                 <hr />
-                <Link to="/register">Sign up</Link>
+                <Link to="/login">Log in</Link>
               </div>
             </div>
           </div>
         </div>
       </div>
     );
+  }
+
+  onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      userName: e.target.value,
+    });
   }
 
   onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
@@ -99,6 +111,7 @@ class Login extends Component<any, LoginState> {
     e.preventDefault();
 
     const {
+      userName,
       email,
       password,
     } = this.state;
@@ -108,22 +121,18 @@ class Login extends Component<any, LoginState> {
         formSubmitted: true,
       });
 
-      const promise = await axios.post(
-        '/auth/login',
+      await axios.post(
+        '/user',
         {
+          username: userName,
           email,
           password,
-        }
+        },
       );
-
-      const response = promise.data;
-      const token = response['auth_token'];
-
-      window.sessionStorage.setItem('token', token);
 
       this.setState({
         formSubmitted: false,
-        shouldRedirectHome: true,
+        shouldRedirectLogin: true,
       });
     } catch (error) {
       console.log(error);
@@ -135,4 +144,4 @@ class Login extends Component<any, LoginState> {
   }
 }
 
-export default Login;
+export default Register;

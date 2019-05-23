@@ -3,10 +3,11 @@ import React, { ChangeEvent, Component, FormEvent } from 'react';
 import { BrowserRouter, Switch, Route, NavLink, Link } from 'react-router-dom';
 
 import Home from './components/home/Home';
+import Register from './components/register/Register';
 import Login from './components/login/Login';
 import Logout from './components/logout/Logout';
-import styles from './App.module.scss';
-import TaskBrowser from './components/taskBrowser/TaskBrowser';
+import AddTask from './components/add-task/AddTask';
+import Tasks from './components/tasks/Tasks';
 
 class App extends Component<any, any> {
   render() {
@@ -14,11 +15,11 @@ class App extends Component<any, any> {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
-          <Route path="/new_job" component={Home} />
-          <Route path="/pending_jobs" component={Home} />
-          <Route path="/browser" component={TaskBrowser} />
+          <Route path="/add-task" component={AddTask} />
+          <Route path="/tasks" component={Tasks} />
         </Switch>
       </BrowserRouter>
     );

@@ -1,19 +1,19 @@
 import axios from 'axios';
-import React, { ChangeEvent, Component, FormEvent } from 'react';
-import { BrowserRouter, Switch, Route, NavLink, Link, Redirect } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 type LogoutState = {
-  completed: boolean,
+  shouldRedirectHome: boolean,
 }
 
 class Logout extends Component<any, LogoutState> {
   state: LogoutState = {
-    completed: false,
+    shouldRedirectHome: false,
   }
 
   async componentDidMount() {
     try {
-      const logoutResponse =  await axios.get(
+      await axios.get(
         '/auth/logout',
         {
           headers: {
@@ -22,10 +22,8 @@ class Logout extends Component<any, LogoutState> {
         },
       );
 
-      console.log(logoutResponse);
-
       this.setState({
-        completed: true
+        shouldRedirectHome: true
       });
     } catch (error) {
       console.log(error);
@@ -33,13 +31,15 @@ class Logout extends Component<any, LogoutState> {
   }
 
   render() {
-    const { completed } = this.state;
-    if (completed) {
+    const { shouldRedirectHome } = this.state;
+
+    if (shouldRedirectHome) {
       return (
         <Redirect to="/" />
       );
     }
-    return <div></div>;
+
+    return null;
   }
 }
 
