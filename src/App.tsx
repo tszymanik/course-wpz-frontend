@@ -1,6 +1,9 @@
-import axios from 'axios';
-import React, { ChangeEvent, Component, FormEvent } from 'react';
-import { BrowserRouter, Switch, Route, NavLink, Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+} from 'react-router-dom';
 
 import Home from './components/home/Home';
 import Register from './components/register/Register';
