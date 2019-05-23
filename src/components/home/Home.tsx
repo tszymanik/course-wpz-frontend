@@ -1,6 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import Header from '../header/Header';
 import styles from './Home.module.scss';
@@ -14,12 +15,14 @@ type User = {
 };
 
 type HomeState = {
+  shouldRedirectLogin: boolean;
   authenticated: boolean;
   user: User;
 };
 
 class Home extends Component<any, HomeState> {
   state: HomeState = {
+    shouldRedirectLogin: false,
     authenticated: false,
     user: {
       id: '',
@@ -34,39 +37,49 @@ class Home extends Component<any, HomeState> {
     const token = window.sessionStorage.getItem('token');
 
     if (token !== null) {
-      this.setState({
-        authenticated: true,
-      });
-
-      const response = await axios.get(
-        '/auth/status',
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
+      try {
+        const response = await axios.get(
+          '/auth/status',
+          {
+            headers: {
+              'Authorization': token,
+            },
           },
-        },
-      );
-      const data = response.data.data;
+        );
+        const data = response.data.data;
 
-      const user: User = {
-        id: data.id,
-        userName: data['username'],
-        email: data.email,
-        createdDate: moment(data['created_date']).toDate(),
-        lastLogin: moment(data['last_login_date']).toDate(),
-      };
+        const user: User = {
+          id: data.id,
+          userName: data['username'],
+          email: data.email,
+          createdDate: moment(data['created_date']).toDate(),
+          lastLogin: moment(data['last_login_date']).toDate(),
+        };
 
-      this.setState({
-        user,
-      });
+        this.setState({
+          user,
+          authenticated: true,
+        });
+      } catch (error) {
+        console.log(error);
+        this.setState({ shouldRedirectLogin: true });
+      }
+    } else {
+      this.setState({ shouldRedirectLogin: true });
     }
   }
 
   render() {
     const {
+      shouldRedirectLogin,
       authenticated,
       user,
     } = this.state;
+
+    if (shouldRedirectLogin) {
+      return <Redirect to="/login" />
+    }
+
     if (authenticated) {
       return (
         <>
@@ -90,6 +103,7 @@ class Home extends Component<any, HomeState> {
         </>
       );
     }
+
     return null;
   }
 }

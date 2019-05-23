@@ -9,6 +9,9 @@ const Header = () => {
       <div className="container">
         <div className="d-flex">
           <ul className={styles.menu}>
+          <li className={styles.menuItem}>
+              <NavLink to="/" activeClassName={styles.active}>Home</NavLink>
+            </li>
             <li className={styles.menuItem}>
               <NavLink to="/add-task" activeClassName={styles.active}>Add task</NavLink>
             </li>

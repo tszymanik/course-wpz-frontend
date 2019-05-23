@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
 type LogoutState = {
-  shouldRedirectHome: boolean,
+  shouldRedirectLogin: boolean,
 }
 
 class Logout extends Component<any, LogoutState> {
   state: LogoutState = {
-    shouldRedirectHome: false,
+    shouldRedirectLogin: false,
   }
 
   async componentDidMount() {
@@ -22,8 +22,10 @@ class Logout extends Component<any, LogoutState> {
         },
       );
 
+      sessionStorage.removeItem('token');
+
       this.setState({
-        shouldRedirectHome: true
+        shouldRedirectLogin: true,
       });
     } catch (error) {
       console.log(error);
@@ -31,11 +33,11 @@ class Logout extends Component<any, LogoutState> {
   }
 
   render() {
-    const { shouldRedirectHome } = this.state;
+    const { shouldRedirectLogin } = this.state;
 
-    if (shouldRedirectHome) {
+    if (shouldRedirectLogin) {
       return (
-        <Redirect to="/" />
+        <Redirect to="/login" />
       );
     }
 
